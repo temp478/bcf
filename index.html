@@ -3,19 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kinked Bandcamp Data</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Kinked Bandcamp Mobile View</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background: #000;
+        }
+        #container {
+            position: relative;
+            height: 100%;
+            width: 100%;
+        }
+        iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-family: sans-serif;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    <div id="loading">
-        <h1>Loading Kinked Bandcamp Data...</h1>
-        <p>If this message persists, the scraper may not have run yet.</p>
+    <div id="container">
+        <div class="loading" id="loading-message">Loading Kinked Bandcamp...</div>
+        <iframe id="bandcamp-frame" style="opacity:0;transition:opacity 1s;" 
+                src="https://kinked.bandcamp.com"></iframe>
     </div>
+
     <script>
-        // This will be replaced by the actual content when the scraper runs
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('Page loaded, waiting for data...');
-        });
+        // Show iframe when it's loaded
+        document.getElementById('bandcamp-frame').onload = function() {
+            // Hide loading message and show iframe
+            document.getElementById('loading-message').style.display = 'none';
+            document.getElementById('bandcamp-frame').style.opacity = '1';
+            
+            // Force mobile view using viewport
+            try {
+                const frame = document.getElementById('bandcamp-frame');
+                frame.addEventListener('load', function() {
+                    // Try to force mobile viewport if possible
+                    if (frame.contentWindow && frame.contentWindow.document) {
+                        const meta = frame.contentWindow.document.createElement('meta');
+                        meta.name = 'viewport';
+                        meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0';
+                        frame.contentWindow.document.head.appendChild(meta);
+                    }
+                });
+            } catch(e) {
+                // Security restrictions may prevent this in some browsers
+                console.log("Could not modify iframe content due to security restrictions");
+            }
+        };
     </script>
 </body>
-</html> 
+</html>
