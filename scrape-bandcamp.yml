@@ -1,7 +1,7 @@
 name: Scrape Bandcamp
 on:
   schedule:
-    - cron: '0 */1 * * *'  # Run every 1 hour
+    - cron: '0 */12 * * *'  # Run every 12 hours
   workflow_dispatch:  # Allow manual trigger
 
 jobs:
@@ -19,6 +19,10 @@ jobs:
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git add data.json index.html
+          git add .
           git commit -m "Update bandcamp data" || exit 0
           git push
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: .  # Deploy the entire repository 
