@@ -1,0 +1,12 @@
+{
+  "name": "bandcamp-kinked-scraper",
+  "version": "1.0.0",
+  "description": "Static site generator for kinked.bandcamp.com",
+  "main": "scraper.js",
+  "scripts": {
+    "scrape": "node scraper.js"
+  },
+  "dependencies": {
+    "bandcamp-scraper": "^1.4.0"
+  }
+} 
